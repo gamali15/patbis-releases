@@ -196,6 +196,9 @@ class MainActivity : AppCompatActivity() {
         viewFinder    = findViewById(R.id.viewFinder)
         statusBar     = findViewById(R.id.statusBar)
 
+        // Header'daki bağlantı butonu
+        findViewById<TextView>(R.id.btnBaglan).setOnClickListener { sunucuyaBaglan() }
+
         adapter = BarcodeListAdapter(this, gs1List, otherList)
         listView.adapter = adapter
 
@@ -1213,6 +1216,112 @@ class MainActivity : AppCompatActivity() {
     }
 
     // ═══════════════════════════════════════════════════════════════════
+    // ── SUNUCU BAĞLANTI YÖNETİMİ ────────────────────────────────────────
+    // ═══════════════════════════════════════════════════════════════════
+
+    /**
+     * Header'daki 🔗 butonuna basınca çağrılır.
+     * Bağlantı varsa durumu göster, yoksa QR tarama başlat.
+     */
+    private fun sunucuyaBaglan() {
+        if (activeServerUrl.isNotEmpty()) {
+            // Bağlı — ping at, durumu göster
+            val mesaj = buildString {
+                appendLine("Sunucu: $activeServerUrl")
+                if (loggedInPersonelId != -1) appendLine("Kullanıcı: $loggedInPersonelAd")
+                appendLine()
+                appendLine("Bağlantıyı test edeyim mi?")
+            }
+            AlertDialog.Builder(this)
+                .setTitle("🔗 Sunucu Bağlantısı")
+                .setMessage(mesaj)
+                .setPositiveButton("Test Et") { _, _ -> baglantiTest() }
+                .setNeutralButton("Yeniden Tarat") { _, _ -> qrTaramaBaslat() }
+                .setNegativeButton("Bağlantıyı Kes") { _, _ ->
+                    activeServerUrl = ""
+                    loggedInPersonelId = -1
+                    loggedInPersonelAd = ""
+                    sessionToken = ""
+                    prefs.edit().remove("active_server_url").remove("logged_in_personel_id")
+                        .remove("session_token").apply()
+                    updateUI()
+                    Toast.makeText(this, "Sunucu bağlantısı kesildi.", Toast.LENGTH_SHORT).show()
+                }
+                .show()
+        } else {
+            // Bağlı değil — QR tarat
+            qrTaramaBaslat()
+        }
+    }
+
+    /** QR tarama modunu başlatır (kamera veya Honeywell tetik). */
+    private fun qrTaramaBaslat() {
+        AlertDialog.Builder(this)
+            .setTitle("📷 Sunucu QR Kodu")
+            .setMessage(
+                "Web paneli açın → Ayarlar → QR kodunu tarayın.\n\n" +
+                "Adres: http://100.75.52.19:8080\n\n" +
+                "Kamera ile taramak için Tamam'a basın."
+            )
+            .setPositiveButton("📷 Kamerayla Tara") { _, _ ->
+                isDepoScanMode = false
+                openCamera(depoMode = false)
+                Toast.makeText(this, "QR kodu kameraya gösterin", Toast.LENGTH_LONG).show()
+            }
+            .setNegativeButton("İptal", null)
+            .show()
+    }
+
+    /** Mevcut sunucuya ping atar, sonucu dialog ile gösterir. */
+    private fun baglantiTest() {
+        val pingUrl = "${activeServerUrl}/api/saglik"
+        val progress = AlertDialog.Builder(this)
+            .setMessage("Bağlantı test ediliyor...").setCancelable(false).create()
+        progress.show()
+
+        Executors.newSingleThreadExecutor().execute {
+            var ok = false
+            try {
+                val conn = java.net.URL(pingUrl).openConnection() as java.net.HttpURLConnection
+                conn.connectTimeout = 4000; conn.readTimeout = 4000
+                ok = conn.responseCode == 200
+                conn.disconnect()
+            } catch (_: Exception) {}
+
+            runOnUiThread {
+                progress.dismiss()
+                if (ok) {
+                    beepSuccess(); flashStatus("#4CAF50")
+                    Toast.makeText(this, "✓ Sunucu bağlantısı sağlıklı!", Toast.LENGTH_SHORT).show()
+                } else {
+                    beepError(); flashStatus("#F44336")
+                    yenidenTaratIste("Sunucuya erişilemiyor.")
+                }
+            }
+        }
+    }
+
+    /**
+     * Bağlantı koptuğunda çağrılır — kullanıcıya QR yeniden taratma seçeneği sunar.
+     * @param sebep Neden koptuğunu açıklayan kısa mesaj
+     */
+    private fun yenidenTaratIste(sebep: String) {
+        runOnUiThread {
+            AlertDialog.Builder(this)
+                .setTitle("📡 Bağlantı Sorunu")
+                .setMessage("$sebep\n\nSunucu IP'si değişmiş olabilir.\nWeb panelden QR kodu yeniden taratır mısınız?")
+                .setPositiveButton("📷 Yeniden Tarat") { _, _ -> qrTaramaBaslat() }
+                .setNegativeButton("Çevrimdışı Devam") { _, _ ->
+                    activeServerUrl = ""
+                    loggedInPersonelId = -1
+                    prefs.edit().remove("active_server_url").apply()
+                    updateUI()
+                }
+                .show()
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
     // ── ÇIKIŞ YAP — Tüm Oturumları Servera Gönder ──────────────────────
     // ═══════════════════════════════════════════════════════════════════
 
@@ -1448,7 +1557,15 @@ class MainActivity : AppCompatActivity() {
                     conn.disconnect()
 
                 } catch (e: Exception) {
-                    hataMesajlari.add("$DISPLAY_PREFIX$depo: ${e.localizedMessage}")
+                    val hata = e.localizedMessage ?: "Bilinmeyen hata"
+                    hataMesajlari.add("$DISPLAY_PREFIX$depo: $hata")
+                    // Bağlantı hatası mı kontrol et
+                    if (e is java.net.ConnectException || e is java.net.SocketTimeoutException
+                        || e is java.net.UnknownHostException) {
+                        runOnUiThread { progress.dismiss() }
+                        yenidenTaratIste("$DISPLAY_PREFIX$depo sunucusuna ulaşılamadı.")
+                        return@execute
+                    }
                 }
             }
 
@@ -1943,7 +2060,8 @@ class MainActivity : AppCompatActivity() {
                 runOnUiThread {
                     beepError()
                     flashStatus("#F44336")
-                    Toast.makeText(this@MainActivity, "Sunucuya bağlanılamadı! Barkod yerel listeye çevrimdışı eklendi.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MainActivity, "Sunucuya bağlanılamadı! Barkod yerel listeye eklendi.", Toast.LENGTH_LONG).show()
+                    yenidenTaratIste("Sunucuya bağlanılamadı.")
 
                     val allItems = gs1List + otherList
                     if (!allItems.contains(barcode)) {
