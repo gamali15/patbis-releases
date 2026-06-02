@@ -78,7 +78,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnCamera: Button
     private lateinit var btnClear: Button
     private lateinit var btnExport: Button
-    private lateinit var btnShare: Button
     private lateinit var btnCikis: Button
     private lateinit var etManualInput: EditText
     private lateinit var btnManualEkle: Button
@@ -191,7 +190,6 @@ class MainActivity : AppCompatActivity() {
         btnCamera     = findViewById(R.id.btnCamera)
         btnClear      = findViewById(R.id.btnClear)
         btnExport     = findViewById(R.id.btnExport)
-        btnShare      = findViewById(R.id.btnShare)
         btnCikis      = findViewById(R.id.btnCikis)
         etManualInput = findViewById(R.id.etManualInput)
         btnManualEkle = findViewById(R.id.btnManualEkle)
@@ -236,7 +234,6 @@ class MainActivity : AppCompatActivity() {
                 .setNegativeButton("Hayır", null).show()
         }
 
-        btnShare.setOnClickListener { shareFile() }
         btnCikis.setOnClickListener { cikisYap() }
 
         btnExport.setOnClickListener {
@@ -1235,6 +1232,8 @@ class MainActivity : AppCompatActivity() {
             val gs1:  List<String>,
             val other: List<String>,
             val tarih: String,
+            val kullanici: String,
+            val kullanim: String,
         )
 
         val aktifOturumlar = mutableListOf<OturumBilgi>()
@@ -1244,67 +1243,117 @@ class MainActivity : AppCompatActivity() {
             val aktif = freshPrefs.getBoolean(depoSessionKey(depo, "aktif"), false)
             if (!aktif) continue
 
-            val gs1Set   = freshPrefs.getStringSet(depoSessionKey(depo, "gs1_indexed"), emptySet())!!.toSet()
+            val gs1Set   = freshPrefs.getStringSet(depoSessionKey(depo, "gs1_indexed"),   emptySet())!!.toSet()
             val otherSet = freshPrefs.getStringSet(depoSessionKey(depo, "other_indexed"), emptySet())!!.toSet()
             if (gs1Set.isEmpty() && otherSet.isEmpty()) continue
 
-            val gs1Parsed = gs1Set.sortedBy { it.substringBefore("|").toIntOrNull() ?: 0 }
-                .map { it.substringAfter("|") }
-            val otherParsed = otherSet.sortedBy { it.substringBefore("|").toIntOrNull() ?: 0 }
-                .map { it.substringAfter("|") }
-            val tarih = freshPrefs.getString(depoSessionKey(depo, "tarih"), "") ?: ""
+            val gs1Parsed   = gs1Set.sortedBy   { it.substringBefore("|").toIntOrNull() ?: 0 }.map { it.substringAfter("|") }
+            val otherParsed = otherSet.sortedBy { it.substringBefore("|").toIntOrNull() ?: 0 }.map { it.substringAfter("|") }
 
-            aktifOturumlar.add(OturumBilgi(depo, gs1Parsed, otherParsed, tarih))
+            aktifOturumlar.add(OturumBilgi(
+                depo      = depo,
+                gs1       = gs1Parsed,
+                other     = otherParsed,
+                tarih     = freshPrefs.getString(depoSessionKey(depo, "tarih"),     "") ?: "",
+                kullanici = freshPrefs.getString(depoSessionKey(depo, "kullanici"), "") ?: "",
+                kullanim  = freshPrefs.getString(depoSessionKey(depo, "kullanim"),  "") ?: "",
+            ))
         }
 
         if (aktifOturumlar.isEmpty()) {
-            Toast.makeText(this, "Gönderilecek aktif oturum yok!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Aktif oturum yok!", Toast.LENGTH_SHORT).show()
             return
         }
 
         val toplamBarkod = aktifOturumlar.sumOf { it.gs1.size + it.other.size }
         val serverBagli  = activeServerUrl.isNotEmpty() && loggedInPersonelId != -1
 
-        // ── 3. Özet dialog ──
+        // ── 3. Özet dialog — Her zaman Paylaş + varsa Servera Gönder ──
         val ozet = buildString {
-            appendLine("Aktif oturumlar servera gönderilecek:\n")
             aktifOturumlar.forEach { o ->
                 appendLine("📦 $DISPLAY_PREFIX${o.depo}")
-                appendLine("   ${o.gs1.size + o.other.size} barkod  •  ${o.tarih}")
+                appendLine("   ${o.gs1.size + o.other.size} barkod  •  ${o.tarih.ifEmpty { "—" }}")
             }
             appendLine("\nToplam: $toplamBarkod barkod")
-            if (!serverBagli) {
-                appendLine("\n⚠ Sunucu bağlantısı yok!")
-                appendLine("TXT dosyaları paylaşım ile gönderilebilir.")
+        }
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("🚪 Çıkış Yap")
+            .setMessage(ozet)
+            // ── Her zaman: Paylaş ──
+            .setPositiveButton("📤 Paylaş") { _, _ ->
+                paylasTumOturumlar(aktifOturumlar.map {
+                    object {
+                        val depo      = it.depo
+                        val gs1       = it.gs1
+                        val other     = it.other
+                        val kullanici = it.kullanici
+                        val kullanim  = it.kullanim
+                    }
+                })
+            }
+            .setNegativeButton("İptal", null)
+
+        // ── Ek seçenek: Server bağlıysa Servera Gönder ──
+        if (serverBagli) {
+            dialog.setNeutralButton("🖥 Servera Gönder") { _, _ ->
+                gonderServera(aktifOturumlar.map { Triple(it.depo, it.gs1, it.other) })
             }
         }
 
-        AlertDialog.Builder(this)
-            .setTitle("🚪 Çıkış Yap")
-            .setMessage(ozet)
-            .setPositiveButton(if (serverBagli) "✓ Servera Gönder" else "📤 TXT Paylaş") { _, _ ->
-                if (serverBagli) {
-                    gonderServera(aktifOturumlar.map { Triple(it.depo, it.gs1, it.other) })
-                } else {
-                    aktifOturumlar.forEach { o ->
-                        // Her oturum için ayrı paylaşım başlat
-                        val eski = Pair(secilenDepo, Pair(gs1List.toList(), otherList.toList()))
-                        gs1List.clear(); otherList.clear()
-                        gs1List.addAll(o.gs1); otherList.addAll(o.other)
-                        secilenDepo  = o.depo
-                        kullaniciAdi = freshPrefs.getString(depoSessionKey(o.depo, "kullanici"), "") ?: ""
-                        kullanimYeri = freshPrefs.getString(depoSessionKey(o.depo, "kullanim"),  "") ?: ""
-                        shareFile()
-                        // Geri yükle
-                        gs1List.clear(); otherList.clear()
-                        gs1List.addAll(eski.second.first)
-                        otherList.addAll(eski.second.second)
-                        secilenDepo = eski.first
-                    }
+        dialog.show()
+    }
+
+    /** Tüm aktif oturumları birleştirip tek TXT olarak paylaşım ekranını açar. */
+    private fun paylasTumOturumlar(oturumlar: List<Any>) {
+        val tarihDosya = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(java.util.Date())
+        val tarihGoster = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(java.util.Date())
+
+        // Tek oturum varsa direkt paylaş, birden fazlaysa döngüyle
+        @Suppress("UNCHECKED_CAST")
+        val liste = oturumlar as List<*>
+
+        liste.forEach { o ->
+            val depo      = (o as Any).javaClass.getDeclaredField("depo").also { it.isAccessible = true }.get(o) as String
+            val gs1       = o.javaClass.getDeclaredField("gs1").also { it.isAccessible = true }.get(o) as List<*>
+            val other     = o.javaClass.getDeclaredField("other").also { it.isAccessible = true }.get(o) as List<*>
+            val kullanici = o.javaClass.getDeclaredField("kullanici").also { it.isAccessible = true }.get(o) as String
+            val kullanim  = o.javaClass.getDeclaredField("kullanim").also { it.isAccessible = true }.get(o) as String
+
+            val toplam = gs1.size + other.size
+            val sb = StringBuilder()
+            sb.appendLine("Depo: $DISPLAY_PREFIX$depo")
+            sb.appendLine("Kullanici: ${kullanici.ifEmpty { loggedInPersonelAd.ifEmpty { "-" } }}")
+            sb.appendLine("Kullanim_Yeri: ${kullanim.ifEmpty { "-" }}")
+            sb.appendLine("Tarih: $tarihGoster")
+            sb.appendLine("Adet: $toplam")
+            sb.appendLine("GS1: ${gs1.size}")
+            sb.appendLine("Manuel: ${other.size}")
+            sb.appendLine()
+            sb.appendLine("Barcode")
+            gs1.forEach  { sb.appendLine(it) }
+            other.forEach { sb.appendLine(it) }
+
+            try {
+                val safeDepo  = depo.replace("-", "_")
+                val fileName  = "ozaltin_${safeDepo}_$tarihDosya.txt"
+                val cacheFile = java.io.File(cacheDir, fileName)
+                cacheFile.writeText(sb.toString(), Charsets.UTF_8)
+
+                val shareUri = androidx.core.content.FileProvider.getUriForFile(
+                    this, "${packageName}.provider", cacheFile
+                )
+                val intent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_STREAM, shareUri)
+                    putExtra(Intent.EXTRA_SUBJECT, fileName)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
+                startActivity(Intent.createChooser(intent, "TXT Paylaş — $DISPLAY_PREFIX$depo"))
+            } catch (e: Exception) {
+                Toast.makeText(this, "Paylaşım hatası: ${e.message}", Toast.LENGTH_LONG).show()
             }
-            .setNegativeButton("İptal", null)
-            .show()
+        }
     }
 
     /**
