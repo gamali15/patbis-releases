@@ -1,6 +1,6 @@
 {
-  "surum": "1.0.0",
-  "notlar": "İlk kararlı sürüm.",
-  "tarih": "2026-05-18",
+  "surum": "1.1.0",
+  "notlar": "Çıkış Yap butonu eklendi — tüm aktif oturumlar servera otomatik gönderilir. TXT arşivleme, mükerrer kontrol ve sonuç özeti.",
+  "tarih": "2026-06-02",
   "zorunlu": false
 }
