@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  patbis-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: patbis-api-server
+    ports:
+      - "5001:5001"
+    volumes:
+      - /mnt/patbis_usb/patbis_data:/var/patbis_data
+    restart: always
+    environment:
+      - TZ=Europe/Istanbul

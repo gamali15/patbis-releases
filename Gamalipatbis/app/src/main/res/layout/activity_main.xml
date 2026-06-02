@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0A0A0A">
+
+    <!-- BAŞLIK -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="#1A1A1A"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="ÖZALTIN PATBİS"
+            android:textColor="#4CAF50"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/tvDepoInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Depo seçilmedi"
+            android:textColor="#888888"
+            android:textSize="11sp"
+            android:layout_marginEnd="12dp"/>
+        <TextView
+            android:id="@+id/btnAbout"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:gravity="center"
+            android:text="ℹ"
+            android:textColor="#4CAF50"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"/>
+    </LinearLayout>
+
+    <!-- SAYAÇ -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#111111"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="#4CAF50"
+                android:textSize="48sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="okunan"
+                android:textColor="#555555"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:background="#1A1A1A"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:minHeight="82dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SON TARAMA"
+                android:textColor="#4CAF50"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/tvLastScan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minLines="3"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:fontFamily="monospace"
+                android:text="Bekleniyor..."
+                android:textColor="#CCCCCC"
+                android:textSize="12sp"
+                android:lineSpacingMultiplier="1.1" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- DURUM ŞERİDİ -->
+    <View
+        android:id="@+id/statusBar"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="#4CAF50"/>
+
+    <!-- KAMERA -->
+    <androidx.camera.view.PreviewView
+        android:id="@+id/viewFinder"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="#000000"
+        android:visibility="gone"/>
+
+    <!-- LİSTE -->
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#0D0D0D"
+        android:divider="#1A1A1A"
+        android:dividerHeight="1dp"/>
+
+    <!-- MANüEL GİRİŞ ALANI -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#1A1A1A"
+        android:padding="8dp">
+
+        <EditText
+            android:id="@+id/etManualInput"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:hint="UID veya tam barkod gir, Enter'a bas..."
+            android:textColor="#FFFFFF"
+            android:textColorHint="#555555"
+            android:textSize="13sp"
+            android:fontFamily="monospace"
+            android:background="#0D0D0D"
+            android:padding="10dp"
+            android:inputType="text"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:layout_marginEnd="6dp"/>
+
+        <Button
+            android:id="@+id/btnManualEkle"
+            android:layout_width="wrap_content"
+            android:layout_height="46dp"
+            android:text="Ekle"
+            android:backgroundTint="#5D4037"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"/>
+    </LinearLayout>
+
+    <!-- BUTONLAR -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#111111"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="6dp">
+
+            <Button
+                android:id="@+id/btnDepo"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="🏭 Depo Seç"
+                android:backgroundTint="#1565C0"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:layout_marginEnd="4dp"/>
+
+            <Button
+                android:id="@+id/btnCamera"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="📷 Kamera"
+                android:backgroundTint="#1E1E1E"
+                android:textColor="#888888"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+
+            <Button
+                android:id="@+id/btnClear"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:text="🗑 TEMİZLE"
+                android:backgroundTint="#2A2A2A"
+                android:textColor="#AAAAAA"
+                android:textSize="12sp"
+                android:layout_marginEnd="4dp"/>
+
+            <Button
+                android:id="@+id/btnExport"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="2"
+                android:text="💾 TXT AKTAR"
+                android:backgroundTint="#2E7D32"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnShare"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="📤 PAYLAŞ (Drive / Gmail / WhatsApp)"
+            android:backgroundTint="#1565C0"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:layout_marginBottom="4dp"/>
+
+        <Button
+            android:id="@+id/btnCikis"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="🚪 ÇIKIŞ YAP — Tüm Oturumları Servera Gönder"
+            android:backgroundTint="#E65100"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+</LinearLayout>

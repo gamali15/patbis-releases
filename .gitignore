@@ -1,0 +1,42 @@
+# Android
+*.apk
+*.aab
+*.dex
+*.class
+bin/
+gen/
+out/
+build/
+.gradle/
+local.properties
+*.iml
+.idea/
+captures/
+.externalNativeBuild/
+.cxx/
+*.keystore
+!debug.keystore
+
+# Android - gradle wrapper jar (keep .bat and script, skip jar)
+Gamalipatbis/gradle/wrapper/gradle-wrapper.jar
+
+# Windows / Tauri
+Gamalipatbis_windows/node_modules/
+Gamalipatbis_windows/dist/
+Gamalipatbis_windows/src-tauri/target/
+Gamalipatbis_windows/.vite/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+src-python/python-embed/
+src-python/DB/
+src-python/__pycache__/
+
+# Genel
+*.log
+.DS_Store
+Thumbs.db
+.env
+*.tmp

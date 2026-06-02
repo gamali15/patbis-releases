@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#0A0A0C">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:background="@drawable/bg_about_dialog"
+        android:layout_margin="12dp">
+
+        <!-- ── BAŞLIK ── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <!-- Logo -->
+            <FrameLayout
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_about_card"
+                android:layout_marginEnd="12dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="⚡"
+                    android:textSize="20sp" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GAMALI PATBİS"
+                    android:textColor="#F1F5F9"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvAboutLocalVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SÜRÜM v1.0"
+                    android:textColor="#475569"
+                    android:textSize="11sp"
+                    android:fontFamily="monospace"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <!-- Kapat Butonu -->
+            <TextView
+                android:id="@+id/btnAboutClose"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:gravity="center"
+                android:text="✕"
+                android:textColor="#475569"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+        </LinearLayout>
+
+        <!-- ── AÇIKLAMA ── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Özaltın İnşaat bünyesindeki patlayıcı madde depolarının T.C. İçişleri Bakanlığı PATBİS sistemine uyumlu envanter takibini sağlamak amacıyla geliştirilmiş kurumsal bir otomasyon yazılımıdır."
+            android:textColor="#94A3B8"
+            android:textSize="12.5sp"
+            android:lineSpacingMultiplier="1.2"
+            android:layout_marginBottom="20dp" />
+
+        <!-- ── AMAÇLAR ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AMAÇLAR"
+            android:textColor="#475569"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_about_card"
+            android:layout_marginBottom="20dp">
+
+            <!-- Amaç 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:text="🛡"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:layout_marginEnd="10dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PATBİS Uyumluluğu"
+                        android:textColor="#E2E8F0"
+                        android:textSize="12.5sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="T.C. İçişleri Bakanlığı Patlayıcı Madde Bilgi Sistemi mevzuatına tam uyumlu envanter kayıt ve takip işlemleri."
+                        android:textColor="#64748B"
+                        android:textSize="11.5sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#21262D" />
+
+            <!-- Amaç 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:text="☷"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:layout_marginEnd="10dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hiyerarşik Stok Takibi"
+                        android:textColor="#E2E8F0"
+                        android:textSize="12.5sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="GS1-128 standartlı barkodlarla Palet → Kutu → Ürün seviyesinde kesintisiz stok görünürlüğü."
+                        android:textColor="#64748B"
+                        android:textSize="11.5sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#21262D" />
+
+            <!-- Amaç 3 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:text="📊"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:layout_marginEnd="10dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Depo Yönetimi"
+                        android:textColor="#E2E8F0"
+                        android:textSize="12.5sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Özaltın İnşaat bünyesindeki tüm patlayıcı madde depolarının tek ekrandan anlık durumunu izleme."
+                        android:textColor="#64748B"
+                        android:textSize="11.5sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#21262D" />
+
+            <!-- Amaç 4 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:text="📄"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:layout_marginEnd="10dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="XML / TXT Entegrasyonu"
+                        android:textColor="#E2E8F0"
+                        android:textSize="12.5sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tedarikçi FEEM XML dosyaları ve CK65 barkod TXT çıktılarının otomatik işlenmesi ve eşleştirilmesi."
+                        android:textColor="#64748B"
+                        android:textSize="11.5sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#21262D" />
+
+            <!-- Amaç 5 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:text="🔌"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:layout_marginEnd="10dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Çevrimdışı Çalışma"
+                        android:textColor="#E2E8F0"
+                        android:textSize="12.5sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="İnternet bağlantısı gerektirmez. Tüm veriler yerel veritabanında güvenle saklanır."
+                        android:textColor="#64748B"
+                        android:textSize="11.5sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- ── YAZILIM GÜNCELLEMESİ ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YAZILIM GÜNCELLEMESİ"
+            android:textColor="#475569"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_about_card"
+            android:padding="14dp"
+            android:layout_marginBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="12dp">
+                    <TextView
+                        android:id="@+id/tvAboutCurrentVersion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mevcut sürüm: v1.0"
+                        android:textColor="#94A3B8"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Güncellemeler GitHub sunucusu üzerinden yayınlanır."
+                        android:textColor="#334155"
+                        android:textSize="10.5sp"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnAboutUpdateCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="GÜNCELLEME KONTROL"
+                    android:textColor="#A78BFA"
+                    android:background="@drawable/bg_button_update"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:textAllCaps="true" />
+            </LinearLayout>
+
+            <!-- Güncelleme Durumu Görünümü -->
+            <LinearLayout
+                android:id="@+id/layoutUpdateStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="8dp"
+                android:layout_marginTop="12dp"
+                android:background="#121824"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:id="@+id/pbUpdateLoading"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:indeterminate="true"
+                    android:indeterminateTint="#A78BFA"
+                    style="?android:attr/progressBarStyleSmall" />
+
+                <TextView
+                    android:id="@+id/tvUpdateStatusMessage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Kontrol ediliyor..."
+                    android:textColor="#F1F5F9"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ── FOOTER ── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="© 2026 GAMALI NEXUS — Tüm hakları saklıdır."
+            android:textColor="#334155"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:gravity="center" />
+
+    </LinearLayout>
+</ScrollView>

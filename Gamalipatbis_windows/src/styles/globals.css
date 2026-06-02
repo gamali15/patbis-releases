@@ -1,0 +1,105 @@
+/* GAMALI Cyberpunk V2.0 — PATBİS Teması */
+
+:root {
+  /* Arka planlar */
+  --bg-void: #020617;
+  --bg-panel: #0f172a;
+  --bg-surface: #1e293b;
+
+  /* Neon renkler */
+  --neon-green: #00ff9d;
+  --neon-blue: #00d4ff;
+  --neon-purple: #bd00ff;
+  --neon-orange: #ff9100;
+  --neon-red: #ff0055;
+
+  /* PATBİS accent — GAMALI Green */
+  --accent: #4CAF50;
+  --accent-dim: rgba(76, 175, 80, 0.15);
+
+  /* Metin */
+  --text-primary: #ffffff;
+  --text-secondary: #e2e8f0;
+  --text-muted: #94a3b8;
+
+  /* Tipografi */
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Rajdhani', sans-serif;
+
+  /* Geçişler */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+
+  /* Glow efektleri */
+  --glow-green: 0 0 20px rgba(0, 255, 157, 0.3);
+  --glow-blue: 0 0 20px rgba(0, 212, 255, 0.3);
+  --glow-red: 0 0 20px rgba(255, 0, 85, 0.3);
+  --glow-accent: 0 0 20px rgba(76, 175, 80, 0.3);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 500;
+  background: var(--bg-void);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar — Cyberpunk */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-void);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-surface);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-blue);
+}
+
+/* Seçim rengi */
+::selection {
+  background: rgba(0, 212, 255, 0.3);
+  color: #fff;
+}
+
+/* Genel animasyonlar */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes scan-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}

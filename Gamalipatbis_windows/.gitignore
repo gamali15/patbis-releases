@@ -1,0 +1,32 @@
+# Node
+node_modules/
+dist/
+
+# Rust / Tauri
+src-tauri/target/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+
+# Virtual Environment & Bundled Assets
+venv/
+src-python/python-embed/
+
+# Database & Reports
+src-python/DB/
+*.db
+*.xlsx

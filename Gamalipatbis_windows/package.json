@@ -1,0 +1,29 @@
+{
+  "name": "gamali-patbis",
+  "version": "2.1.0",
+  "description": "GAMALI PATBİS — Patlayıcı Madde Takip Sistemi",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "prepare:python": "python src-python/prepare_embedded_python.py",
+    "tauri:build": "npm run prepare:python && tauri build"
+  },
+  "author": "GAMALI",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@tauri-apps/plugin-dialog": "^2.7.1",
+    "lucide-react": "^1.14.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  },
+  "devDependencies": {
+    "@tauri-apps/api": "^2.11.0",
+    "@tauri-apps/cli": "^2.11.1",
+    "@vitejs/plugin-react": "^6.0.1",
+    "vite": "^8.0.12"
+  }
+}
